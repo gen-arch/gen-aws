@@ -5,7 +5,7 @@
     "ap-northeast-1d"
   ],
   "ami:account=681514512350:filters.image-type.0=machine:filters.name.0=bastion:filters.state.0=available:region=ap-northeast-1": "ami-0117bce14674d571d",
-  "ami:account=681514512350:filters.image-type.0=machine:filters.name.0=tools:filters.state.0=available:region=ap-northeast-1": "ami-0e96abcacca2aa7af5",
+  "ami:account=681514512350:filters.image-type.0=machine:filters.name.0=tools:filters.state.0=available:region=ap-northeast-1": "ami-0129055a971df2cb7",
   "hosted-zone:account=681514512350:domainName=genxarch.com:region=ap-northeast-1": {
     "Id": "/hostedzone/Z07128251UX61MHHPDB9H",
     "Name": "genxarch.com."

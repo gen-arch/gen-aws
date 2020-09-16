@@ -10,15 +10,15 @@
     "public_hostzone": true,
     "dev": {
       "cibr": "10.3.0.0/16",
-      "maxAzs": 1
+      "maxAzs": 2
     },
     "pre": {
       "cibr": "10.2.0.0/16",
-      "maxAzs": 1
+      "maxAzs": 2
     },
     "prd": {
       "cibr": "10.1.0.0/16",
-      "maxAzs": 2
+      "maxAzs": 3
     }
   }
 }
