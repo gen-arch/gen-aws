@@ -19,8 +19,9 @@ export class Network extends cdk.Construct {
       enableDnsSupport: true,
       maxAzs: params["maxAzs"],
       subnetConfiguration: [
-        { name: `${env}-private`, subnetType: ec2.SubnetType.PRIVATE, cidrMask: 24 },
-        { name: `${env}-public`,  subnetType: ec2.SubnetType.PUBLIC,  cidrMask: 24 }
+        { name: `${env}-private`,        subnetType: ec2.SubnetType.PRIVATE, cidrMask: 24 },
+        { name: `${env}-private-secure`, subnetType: ec2.SubnetType.PRIVATE, cidrMask: 24 },
+        { name: `${env}-public`,         subnetType: ec2.SubnetType.PUBLIC,  cidrMask: 24 }
       ]
     });
     this.vpc.addFlowLog(`${env}-vpc-flow-log`)

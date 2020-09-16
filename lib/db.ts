@@ -12,9 +12,10 @@ export class DB extends cdk.Construct {
   public readonly docdbs: { [key: string]: docdb.IDatabaseCluster } = {};
   constructor(parent: cdk.Construct, name: string, props: DBProps) {
     super(parent, name);
+    const env: string  = this.node.tryGetContext('env');
 
-    const env:      string  = this.node.tryGetContext('env');
-    const private_subnet    = { subnetType: ec2.SubnetType.PRIVATE }
+    // subnets
+    const private_secure_subnet: ec2.SubnetSelection = { subnetGroupName: `${env}-private-secure` }
 
     this.docdbs["fuckfish"] = new docdb.DatabaseCluster(this, `${env}-fuckfish-mongo`, {
       masterUser: {
@@ -25,10 +26,9 @@ export class DB extends cdk.Construct {
       instanceProps: {
         instanceType: new ec2.InstanceType("t3.medium"),
         vpc: props.vpc,
-        vpcSubnets: private_subnet
+        vpcSubnets: private_secure_subnet
       }
     })
-    
     this.docdbs["fuckfish"].connections.allowFrom(props.asgs["fuckfish"].connections, ec2.Port.tcp(27017), "allow mongo access")
   }
 }

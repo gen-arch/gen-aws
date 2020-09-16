@@ -7,7 +7,7 @@ import targets = require('@aws-cdk/aws-route53-targets');
 
 interface R53StackProps {
   vpc:       ec2.IVpc;
-  instances: { [key: string]: ec2.IInstance; };
+  instances: { [key: string]: ec2.IInstance | ec2.BastionHostLinux; };
   albs:      { [key: string]: elb.IApplicationLoadBalancer; };
   docdbs:    { [key: string]: docdb.IDatabaseCluster };
 }
@@ -23,13 +23,6 @@ export class R53 extends cdk.Construct {
     const public_zone = r53.HostedZone.fromLookup(this, hostzone, { domainName: hostzone })
     new cdk.CfnOutput(this, 'PublicDns', { value: hostzone });
     // ====================================================================================
-
-    // add records
-    new r53.CnameRecord(this, `bastion.${hostzone}`, {
-      zone: public_zone,
-      recordName: "bastion",
-      domainName: props.instances["bastion"].instancePublicDnsName
-    })
 
     new r53.ARecord(this, `www.${hostzone}`, {
       zone: public_zone,

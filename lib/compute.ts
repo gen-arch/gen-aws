@@ -18,7 +18,6 @@ export class Compute extends cdk.Construct {
     // subnets
     const public_subnet:         ec2.SubnetSelection = { subnetGroupName: `${env}-public` }
     const private_subnet:        ec2.SubnetSelection = { subnetGroupName: `${env}-private` }
-    const private_secure_subnet: ec2.SubnetSelection = { subnetGroupName: `${env}-private-secure` }
 
     // ami
     const amazonlinux2 = new ec2.AmazonLinuxImage({ generation: ec2.AmazonLinuxGeneration.AMAZON_LINUX_2 })
@@ -31,12 +30,12 @@ export class Compute extends cdk.Construct {
       "sudo yum install -y vim git util-linux-user",
     ]
 
-    this.instances["bastion"] = new ec2.Instance(this, `${env}-bastion`, {
+    this.instances["bastion"] = new ec2.BastionHostLinux(this, `${env}-bastion`, {
       vpc: props.vpc,
-      vpcSubnets: public_subnet,
+      subnetSelection: private_subnet,
       instanceType: new ec2.InstanceType("t3a.micro"),
       machineImage: bastion,
-      keyName: this.node.tryGetContext('bastion-keyname')
+      instanceName: `${env}-bastion`
     })
 
     // create instance
