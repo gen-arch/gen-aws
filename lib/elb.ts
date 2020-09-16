@@ -21,6 +21,21 @@ export class Elb extends cdk.Construct {
     const private_subnet    = { subnetType: ec2.SubnetType.PRIVATE }
     const public_subnet     = { subnetType: ec2.SubnetType.PUBLIC }
 
+    // create target group
+    let web_tg = new elb.ApplicationTargetGroup(this, "web-tg", {
+      vpc: props.vpc,
+      port: 4567,
+      protocol: elb.ApplicationProtocol.HTTP,
+      targets: [props.asgs["web"]]
+    })
+
+    let fuckfish_tg = new elb.ApplicationTargetGroup(this, "fuckfish-tg", {
+      vpc: props.vpc,
+      port: 4567,
+      protocol: elb.ApplicationProtocol.HTTP,
+      targets: [props.asgs["fuckfish"]]
+    })
+
     // create loadbalancer
     this.albs["web"] = new elb.ApplicationLoadBalancer(this, `${env}-web-alb`, {
       vpc: props.vpc,
@@ -30,8 +45,10 @@ export class Elb extends cdk.Construct {
 
     this.albs["web"].connections.allowDefaultPortFromAnyIpv4
 
+    // add listener
     let web_alb_https = this.albs["web"].addListener('web-alb-https', {
       port: 443,
+      defaultTargetGroups: [web_tg],
       certificateArns: [
         new acm.DnsValidatedCertificate(this, 'SiteCertificate', {
           domainName: `www.${hostzone}`,
@@ -42,17 +59,15 @@ export class Elb extends cdk.Construct {
     })
 
     web_alb_https.addTargets("web", {
-      port: 4567,
+      priority: 1,
       hostHeader: `www.${hostzone}`,
-      protocol: elb.ApplicationProtocol.HTTP,
-      targets: [props.asgs["web"]]
+      targetGroupName: "web-tg"
     });
 
     web_alb_https.addTargets("fuckfish", {
-      port: 4567,
+      priority: 2,
       hostHeader: `fuckfish.${hostzone}`,
-      protocol: elb.ApplicationProtocol.HTTP,
-      targets: [props.asgs["fuckfish"]]
+      targetGroupName: "fuckfish-tg"
     });
   }
 }
