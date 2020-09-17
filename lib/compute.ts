@@ -22,6 +22,7 @@ export class Compute extends cdk.Construct {
     // ami
     const amazonlinux2 = new ec2.AmazonLinuxImage({ generation: ec2.AmazonLinuxGeneration.AMAZON_LINUX_2 })
     const bastion      = new ec2.LookupMachineImage({ name: "bastion" })
+    const fuckfish     = new ec2.LookupMachineImage({ name: "fuckfish" })
 
     // setup commands
     const setup_comand = [
@@ -51,7 +52,7 @@ export class Compute extends cdk.Construct {
       vpc: props.vpc,
       vpcSubnets: private_subnet,
       instanceType: new ec2.InstanceType("t3a.micro"),
-      machineImage: amazonlinux2,
+      machineImage: fuckfish,
       keyName: "bastion"
     })
 

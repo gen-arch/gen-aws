@@ -22,7 +22,7 @@ export class Elb extends cdk.Construct {
     const private_subnet:        ec2.SubnetSelection = { subnetGroupName: `${env}-private` }
 
     // [targetgroup] ------------------------------------------------------------------
-    // create web-tg
+    // create default tg for web-tg
     const web_tg = new elb.ApplicationTargetGroup(this, `${env}-web-tg`, {
       vpc: props.vpc,
       targetType: elb.TargetType.INSTANCE,
@@ -30,14 +30,6 @@ export class Elb extends cdk.Construct {
       port: 4567,
       protocol: elb.ApplicationProtocol.HTTP,
       targets: [props.asgs["web"]]
-    })
-    // ================================================================================
-    // create fuckfish-tg
-    const fuckfish_tg = new elb.ApplicationTargetGroup(this, `${env}-fuckfish-tg`, {
-      vpc: props.vpc,
-      port: 4567,
-      protocol: elb.ApplicationProtocol.HTTP,
-      targets: [props.asgs["fuckfish"]]
     })
     // --------------------------------------------------------------------------------
 
@@ -69,7 +61,9 @@ export class Elb extends cdk.Construct {
     web_alb_https.addTargets("fuckfish", {
       priority: 2,
       hostHeader: `fuckfish.${hostzone}`,
-      targetGroupName: `${env}-fuckfish-tg`
+      port: 4567,
+      protocol: elb.ApplicationProtocol.HTTP,
+      targets: [props.asgs["fuckfish"]]
     });
 
     // --------------------------------------------------------------------------------

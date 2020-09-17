@@ -41,8 +41,9 @@ export class R53 extends cdk.Construct {
 
     // [Private Hostzone] ------------------------------------------------------------------
     // create private domain
-    const private_zone = new r53.PrivateHostedZone(this, `${env}.lan.${hostzone}`, {
-      zoneName: `${env}.lan.${hostzone}`,
+    const private_domain = `${env}.lan.${hostzone}`
+    const private_zone = new r53.PrivateHostedZone(this, private_domain, {
+      zoneName: private_domain,
       vpc: props.vpc
     })
     new cdk.CfnOutput(this, 'PrivateDns', { value: `${env}.lan.${hostzone}` });
@@ -50,14 +51,14 @@ export class R53 extends cdk.Construct {
 
     // add records for all instance
     for (let [name, node] of Object.entries(props.instances)) {
-      new r53.CnameRecord(this, `${name}.${env}.${hostzone}`, {
+      new r53.CnameRecord(this, `${name}.${private_domain}`, {
         zone: private_zone,
         recordName: name,
         domainName: node.instancePrivateDnsName
       })
     }
 
-    new r53.CnameRecord(this, `fuckfish-mongo.${env}.${hostzone}`, {
+    new r53.CnameRecord(this, `fuckfish-mongo.${private_domain}`, {
         zone: private_zone,
         recordName: "fuckfish-mongo",
         domainName: props.docdbs["fuckfish"].clusterEndpoint.hostname
