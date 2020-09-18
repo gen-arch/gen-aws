@@ -6,7 +6,6 @@
     "@aws-cdk/core:stackRelativeExports": "true",
     "prj": "gen-aws",
     "hostzone": "genxarch.com",
-    "bastion-keyname": "1940-ito.local",
     "public_hostzone": true,
     "dev": {
       "cibr": "10.3.0.0/16",

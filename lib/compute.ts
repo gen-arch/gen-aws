@@ -56,6 +56,14 @@ export class Compute extends cdk.Construct {
       keyName: "bastion"
     })
 
+    this.asgs["blog"] = new asg.AutoScalingGroup(this, `${env}-blog`, {
+      vpc: props.vpc,
+      vpcSubnets: private_subnet,
+      instanceType: new ec2.InstanceType("t3a.micro"),
+      machineImage: amazonlinux2,
+      keyName: "bastion"
+    })
+
     // default setup
     for (let [name, node] of Object.entries(this.instances)) {
       if (node instanceof ec2.Instance) {

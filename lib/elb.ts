@@ -52,18 +52,26 @@ export class Elb extends cdk.Construct {
     this.albs["web"].connections.allowDefaultPortFromAnyIpv4
 
     // add listener
-    const web_alb_https = this.albs["web"].addListener(`${env}web-alb-https`, {
+    const web_alb_https = this.albs["web"].addListener(`${env}-web-alb-https`, {
       port: 443,
       defaultTargetGroups: [web_tg],
       certificateArns: [certificateArn],
     })
 
-    web_alb_https.addTargets("fuckfish", {
+    web_alb_https.addTargets(`${env}-fuckfish-tg`, {
       priority: 2,
       hostHeader: `fuckfish.${hostzone}`,
       port: 4567,
       protocol: elb.ApplicationProtocol.HTTP,
       targets: [props.asgs["fuckfish"]]
+    });
+
+    web_alb_https.addTargets(`${env}-blog-tg`, {
+      priority: 3,
+      hostHeader: `blog.${hostzone}`,
+      port: 80,
+      protocol: elb.ApplicationProtocol.HTTP,
+      targets: [props.asgs["blog"]]
     });
 
     // --------------------------------------------------------------------------------
