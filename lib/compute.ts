@@ -1,9 +1,11 @@
 import cdk = require("@aws-cdk/core");
 import ec2 = require("@aws-cdk/aws-ec2");
 import asg = require("@aws-cdk/aws-autoscaling");
+import iam = require("@aws-cdk/aws-iam");
 
 interface ComputeProps {
   vpc:       ec2.IVpc;
+  policy:    { [key: string]: iam.PolicyStatement };
 }
 
 export class Compute extends cdk.Construct {
@@ -36,11 +38,12 @@ export class Compute extends cdk.Construct {
       subnetSelection: private_subnet,
       instanceType: new ec2.InstanceType("t3a.micro"),
       machineImage: bastion,
-      instanceName: `${env}-bastion`
+      instanceName: `${env}-bastion`,
     })
 
     // create instance
-    this.asgs["web"] = new asg.AutoScalingGroup(this, `${env}-web`, {
+    this.asgs["web"] = new asg.AutoScalingGroup(this, `${env}-web-asg`, {
+      autoScalingGroupName: `${env}-web-asg`,
       vpc: props.vpc,
       vpcSubnets: private_subnet,
       instanceType: new ec2.InstanceType("t3a.micro"),
@@ -48,7 +51,8 @@ export class Compute extends cdk.Construct {
       keyName: "bastion"
     })
 
-    this.asgs["fuckfish"] = new asg.AutoScalingGroup(this, `${env}-fuckfish`, {
+    this.asgs["fuckfish"] = new asg.AutoScalingGroup(this, `${env}-fuckfish-asg`, {
+      autoScalingGroupName: `${env}-fuckfish-asg`,
       vpc: props.vpc,
       vpcSubnets: private_subnet,
       instanceType: new ec2.InstanceType("t3a.micro"),
@@ -82,10 +86,11 @@ export class Compute extends cdk.Construct {
         "sudo yum update -y",
         "sudo yum install -y vim git",
       )
+      asg.addToRolePolicy(props.policy["ssm"])
 
       // add connections
       asg.connections.allowFrom(ec2.Peer.anyIpv4(), ec2.Port.icmpPing(), 'allow icmp')
-      asg.connections.allowFrom(this.instances["bastion"].connections, ec2.Port.tcp(22), 'allow ssh connection for bastion')
+      asg.connections.allowFrom(ec2.Peer.anyIpv4(), ec2.Port.tcp(22), 'allow ssh connection')
     }
 
 

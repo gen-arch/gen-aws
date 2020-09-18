@@ -5,13 +5,15 @@ import { Network } from '../lib/network';
 import { R53 } from '../lib/r53';
 import { DB } from '../lib/db';
 import { Elb } from '../lib/elb';
+import { IAM } from '../lib/iam';
 
 class GenAwsStack extends cdk.Stack {
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
     super(parent, name, props);
 
+    const iam     = new IAM(this, 'IAM');
     const network = new Network(this, 'Network');
-    const compute = new Compute(this, 'Compute', {vpc: network.vpc});
+    const compute = new Compute(this, 'Compute', {vpc: network.vpc, policy: iam.policy});
     const db      = new DB(this, 'DB', {vpc: network.vpc, asgs: compute.asgs});
     const elb     = new Elb(this, 'ELB', {vpc: network.vpc, asgs: compute.asgs});
     const r53     = new R53(this, 'R53', {
