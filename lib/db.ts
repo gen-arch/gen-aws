@@ -33,21 +33,5 @@ export class DB extends cdk.Construct {
       }
     })
     this.docdbs["fuckfish"].connections.allowFrom(props.asgs["fuckfish"].connections, ec2.Port.tcp(27017), "allow mongo access")
-
-
-    this.rds["blog"] = new rds.DatabaseCluster(this, `${env}-blog-aurora`, {
-      masterUser: {
-        username: "gen"
-      },
-      engine: rds.DatabaseClusterEngine.AURORA_MYSQL,
-      port: 3306,
-      instanceProps: {
-        instanceType: new ec2.InstanceType("t3.medium"),
-        vpc: props.vpc,
-        vpcSubnets: private_secure_subnet
-      },
-    })
-
-    this.rds["blog"].connections.allowFrom(props.asgs["blog"].connections, ec2.Port.tcp(3306), "allow mysql access")
   }
 }

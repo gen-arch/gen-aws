@@ -65,15 +65,6 @@ export class Elb extends cdk.Construct {
       protocol: elb.ApplicationProtocol.HTTP,
       targets: [props.asgs["fuckfish"]]
     });
-
-    web_alb_https.addTargets(`${env}-blog-tg`, {
-      priority: 3,
-      hostHeader: `blog.${hostzone}`,
-      port: 80,
-      protocol: elb.ApplicationProtocol.HTTP,
-      targets: [props.asgs["blog"]]
-    });
-
     // --------------------------------------------------------------------------------
   }
 }
