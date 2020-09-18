@@ -24,7 +24,6 @@ export class Compute extends cdk.Construct {
 
     // ami
     const amazonlinux2 = new ec2.AmazonLinuxImage({ generation: ec2.AmazonLinuxGeneration.AMAZON_LINUX_2 })
-    const bastion      = new ec2.LookupMachineImage({ name: "bastion" })
     const fuckfish     = new ec2.LookupMachineImage({ name: "fuckfish" })
 
     // setup commands
@@ -34,21 +33,13 @@ export class Compute extends cdk.Construct {
       "sudo yum install -y vim git util-linux-user",
     ]
 
-    this.instances["bastion"] = new ec2.BastionHostLinux(this, `${env}-bastion`, {
-      vpc: props.vpc,
-      subnetSelection: private_subnet,
-      instanceType: new ec2.InstanceType("t3a.micro"),
-      machineImage: bastion,
-      instanceName: `${env}-bastion`,
-    })
-
     // create instance
     this.asgs["web"] = new asg.AutoScalingGroup(this, `${env}-web-asg`, {
       vpc: props.vpc,
       vpcSubnets: private_subnet,
       instanceType: new ec2.InstanceType("t3a.micro"),
       machineImage: amazonlinux2,
-      keyName: "bastion"
+      keyName: "mgmt"
     })
 
     this.asgs["fuckfish"] = new asg.AutoScalingGroup(this, `${env}-fuckfish-asg`, {
@@ -56,7 +47,7 @@ export class Compute extends cdk.Construct {
       vpcSubnets: private_subnet,
       instanceType: new ec2.InstanceType("t3a.micro"),
       machineImage: fuckfish,
-      keyName: "bastion"
+      keyName: "mgmt"
     })
 
     // default setup
