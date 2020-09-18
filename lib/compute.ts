@@ -85,7 +85,7 @@ export class Compute extends cdk.Construct {
         "sudo yum update -y",
         "sudo yum install -y vim git",
       )
-      asg.addToRolePolicy(props.policy["ssm"])
+      //asg.addToRolePolicy(props.policy["ssm"])
       Tag.add(asg, "Name", `${env}-${name}-asg`)
 
       // add connections
