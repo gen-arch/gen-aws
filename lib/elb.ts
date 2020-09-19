@@ -58,13 +58,13 @@ export class Elb extends cdk.Construct {
       certificateArns: [certificateArn],
     })
 
-    web_alb_https.addTargets(`${env}-fuckfish-tg`, {
-      priority: 2,
-      hostHeader: `fuckfish.${hostzone}`,
-      port: 4567,
-      protocol: elb.ApplicationProtocol.HTTP,
-      targets: [props.asgs["fuckfish"]]
-    });
+    //web_alb_https.addTargets(`${env}-fuckfish-tg`, {
+    //  priority: 2,
+    //  hostHeader: `fuckfish.${hostzone}`,
+    //  port: 4567,
+    //  protocol: elb.ApplicationProtocol.HTTP,
+    //  targets: [props.asgs["fuckfish"]]
+    //});
     // --------------------------------------------------------------------------------
   }
 }

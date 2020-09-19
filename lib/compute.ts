@@ -51,13 +51,13 @@ export class Compute extends cdk.Construct {
       keyName: "bastion"
     })
 
-    this.asgs["fuckfish"] = new asg.AutoScalingGroup(this, `${env}-fuckfish-asg`, {
-      vpc: props.vpc,
-      vpcSubnets: private_subnet,
-      instanceType: new ec2.InstanceType("t3a.micro"),
-      machineImage: fuckfish,
-      keyName: "bastion"
-    })
+    //this.asgs["fuckfish"] = new asg.AutoScalingGroup(this, `${env}-fuckfish-asg`, {
+    //  vpc: props.vpc,
+    //  vpcSubnets: private_subnet,
+    //  instanceType: new ec2.InstanceType("t3a.micro"),
+    //  machineImage: fuckfish,
+    //  keyName: "bastion"
+    //})
 
     // default setup
     for (let [name, node] of Object.entries(this.instances)) {

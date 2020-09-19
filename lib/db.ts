@@ -20,18 +20,18 @@ export class DB extends cdk.Construct {
     // subnets
     const private_secure_subnet: ec2.SubnetSelection = { subnetGroupName: `${env}-private-secure` }
 
-    this.docdbs["fuckfish"] = new docdb.DatabaseCluster(this, `${env}-fuckfish-mongo`, {
-      masterUser: {
-        username: "gen",
-      },
-      instances: 2,
-      port: 27017,
-      instanceProps: {
-        instanceType: new ec2.InstanceType("t3.medium"),
-        vpc: props.vpc,
-        vpcSubnets: private_secure_subnet
-      }
-    })
-    this.docdbs["fuckfish"].connections.allowFrom(props.asgs["fuckfish"].connections, ec2.Port.tcp(27017), "allow mongo access")
+    //this.docdbs["fuckfish"] = new docdb.DatabaseCluster(this, `${env}-fuckfish-mongo`, {
+    //  masterUser: {
+    //    username: "gen",
+    //  },
+    //  instances: 2,
+    //  port: 27017,
+    //  instanceProps: {
+    //    instanceType: new ec2.InstanceType("t3.medium"),
+    //    vpc: props.vpc,
+    //    vpcSubnets: private_secure_subnet
+    //  }
+    //})
+    //this.docdbs["fuckfish"].connections.allowFrom(props.asgs["fuckfish"].connections, ec2.Port.tcp(27017), "allow mongo access")
   }
 }

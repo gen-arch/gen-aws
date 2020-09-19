@@ -29,11 +29,11 @@ export class R53 extends cdk.Construct {
       target: r53.RecordTarget.fromAlias(new targets.LoadBalancerTarget(props.albs["web"])),
     })
 
-    new r53.ARecord(this, `fuckfish.${hostzone}`, {
-      zone: public_zone,
-      recordName: "fuckfish",
-      target: r53.RecordTarget.fromAlias(new targets.LoadBalancerTarget(props.albs["web"])),
-    })
+    //new r53.ARecord(this, `fuckfish.${hostzone}`, {
+    //  zone: public_zone,
+    //  recordName: "fuckfish",
+    //  target: r53.RecordTarget.fromAlias(new targets.LoadBalancerTarget(props.albs["web"])),
+    //})
     // ------------------------------------------------------------------------------------
 
 
