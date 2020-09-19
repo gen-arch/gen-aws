@@ -21,7 +21,6 @@ export class R53 extends cdk.Construct {
     // [Public Hostzone] ------------------------------------------------------------------
     // lookup for public hostzone
     const public_zone = r53.HostedZone.fromLookup(this, hostzone, { domainName: hostzone })
-    new cdk.CfnOutput(this, 'PublicDns', { value: hostzone });
     // ====================================================================================
 
     new r53.ARecord(this, `www.${hostzone}`, {
@@ -45,7 +44,6 @@ export class R53 extends cdk.Construct {
       zoneName: private_domain,
       vpc: props.vpc
     })
-    new cdk.CfnOutput(this, 'PrivateDns', { value: `${env}.lan.${hostzone}` });
     // ====================================================================================
 
     // add records for all instance
