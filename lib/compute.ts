@@ -2,7 +2,6 @@ import cdk = require("@aws-cdk/core");
 import ec2 = require("@aws-cdk/aws-ec2");
 import asg = require("@aws-cdk/aws-autoscaling");
 import iam = require("@aws-cdk/aws-iam");
-import { Tag } from "@aws-cdk/core";
 
 interface ComputeProps {
   vpc:       ec2.IVpc;
@@ -86,7 +85,7 @@ export class Compute extends cdk.Construct {
         "sudo yum install -y vim git",
       )
       //asg.addToRolePolicy(props.policy["ssm"])
-      Tag.add(asg, "Name", `${env}-${name}-asg`)
+      cdk.Tag.add(asg, "Name", `${env}-${name}-asg`)
 
       // add connections
       asg.connections.allowFrom(ec2.Peer.anyIpv4(), ec2.Port.icmpPing(), 'allow icmp')
