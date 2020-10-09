@@ -5,15 +5,15 @@ import asg = require("@aws-cdk/aws-autoscaling");
 import acm = require("@aws-cdk/aws-certificatemanager");
 import r53 = require('@aws-cdk/aws-route53')
 
-interface ElbProps {
+interface ELBProps {
   vpc:       ec2.IVpc;
   asgs:      { [key: string]: asg.AutoScalingGroup };
 }
 
-export class Elb extends cdk.Construct {
+export class ELB extends cdk.Construct {
   public readonly albs:      { [key: string]: elb.IApplicationLoadBalancer } = {};
 
-  constructor(parent: cdk.Construct, name: string, props: ElbProps) {
+  constructor(parent: cdk.Construct, name: string, props: ELBProps) {
     super(parent, name);
     const env: string  = this.node.tryGetContext('env');
 

@@ -1,34 +1,12 @@
 #!/usr/bin/env node
 import * as cdk from '@aws-cdk/core';
-import { Compute } from '../lib/compute';
-import { Network } from '../lib/network';
-import { R53 } from '../lib/r53';
-import { DB } from '../lib/db';
-import { Elb } from '../lib/elb';
-import { IAM } from '../lib/iam';
+import { NetworkStack     } from '../lib/network-stack';
+import { SecurityStack    } from '../lib/security-stack';
+import { ApplicationStack } from '../lib/application-stack';
 
-class GenAwsStack extends cdk.Stack {
-  constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
-    super(parent, name, props);
-
-    const iam     = new IAM(this, 'IAM');
-    const network = new Network(this, 'Network');
-    const compute = new Compute(this, 'Compute', {vpc: network.vpc, policy: iam.policy});
-    const db      = new DB(this, 'DB', {vpc: network.vpc, asgs: compute.asgs});
-    const elb     = new Elb(this, 'ELB', {vpc: network.vpc, asgs: compute.asgs});
-    const r53     = new R53(this, 'R53', {
-      vpc: network.vpc,
-      instances: compute.instances,
-      albs: elb.albs,
-      docdbs: db.docdbs
-    });
-  }
-};
+const env =  { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION }
 
 const app = new cdk.App();
-new GenAwsStack(app, "GenAwsStack", {
-  env: {
-    account: process.env.CDK_DEFAULT_ACCOUNT,
-    region: process.env.CDK_DEFAULT_REGION
-  }
-});
+const network     = new NetworkStack(app, "NetworkStack", { env: env });
+const security    = new SecurityStack(app, "SecurityStack", { env: env });
+const application = new ApplicationStack(app, "ApplicationStack", { env: env, security: security, network: network });

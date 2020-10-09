@@ -3,16 +3,16 @@ import ec2 = require("@aws-cdk/aws-ec2");
 import asg = require("@aws-cdk/aws-autoscaling");
 import iam = require("@aws-cdk/aws-iam");
 
-interface ComputeProps {
+interface EC2Props {
   vpc:       ec2.IVpc;
   policy:    { [key: string]: iam.PolicyStatement };
 }
 
-export class Compute extends cdk.Construct {
+export class EC2 extends cdk.Construct {
   public readonly instances: { [key: string]: ec2.Instance | ec2.BastionHostLinux } = {};
   public readonly asgs:      { [key: string]: asg.AutoScalingGroup } = {};
 
-  constructor(parent: cdk.Construct, name: string, props: ComputeProps) {
+  constructor(parent: cdk.Construct, name: string, props: EC2Props) {
     super(parent, name);
 
     const env:      string  = this.node.tryGetContext('env');

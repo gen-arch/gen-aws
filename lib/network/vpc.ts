@@ -2,7 +2,7 @@
 import cdk   = require("@aws-cdk/core");
 import ec2   = require("@aws-cdk/aws-ec2");
 
-export class Network extends cdk.Construct {
+export class Vpc extends cdk.Construct {
   public readonly vpc: ec2.Vpc;
 
   //public readonly dbSg: SecurityGroup;
@@ -25,6 +25,5 @@ export class Network extends cdk.Construct {
       ]
     });
     this.vpc.addFlowLog(`${env}-vpc-flow-log`)
-
   }
 }

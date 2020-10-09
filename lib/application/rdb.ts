@@ -1,16 +1,13 @@
 import cdk   = require("@aws-cdk/core");
 import ec2   = require("@aws-cdk/aws-ec2");
 import rds   = require("@aws-cdk/aws-rds");
-import docdb = require("@aws-cdk/aws-docdb");
 import asg   = require("@aws-cdk/aws-autoscaling");
 
 interface DBProps {
   vpc:       ec2.IVpc;
-  asgs:      { [key: string]: asg.AutoScalingGroup };
 }
 
-export class DB extends cdk.Construct {
-  public readonly docdbs: { [key: string]: docdb.IDatabaseCluster } = {};
+export class RDB extends cdk.Construct {
   public readonly rds:    { [key: string]: rds.IDatabaseCluster    } = {};
 
   constructor(parent: cdk.Construct, name: string, props: DBProps) {
