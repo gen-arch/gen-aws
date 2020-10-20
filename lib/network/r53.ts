@@ -7,14 +7,17 @@ interface R53StackProps {
 }
 
 export class R53 extends cdk.Construct {
+  public readonly zones:      { [key: string]: r53.IPrivateHostedZone|r53.IPublicHostedZone } = {};
   constructor(parent: cdk.Construct, name: string, props: R53StackProps) {
     super(parent, name);
     const hostzone: string = this.node.tryGetContext('hostzone');
     const env:      string = this.node.tryGetContext('env');
 
     // [Public Hostzone] ------------------------------------------------------------------
-    // lookup for public hostzone
-    const public_zone = r53.HostedZone.fromLookup(this, hostzone, { domainName: hostzone })
+    // create private domain
+    this.zones["public"] = new r53.PublicHostedZone(this, hostzone, {
+      zoneName: hostzone,
+    })
     // ====================================================================================
 
     // ------------------------------------------------------------------------------------
@@ -23,7 +26,7 @@ export class R53 extends cdk.Construct {
     // [Private Hostzone] ------------------------------------------------------------------
     // create private domain
     const private_domain = `${env}.lan.${hostzone}`
-    const private_zone = new r53.PrivateHostedZone(this, private_domain, {
+    this.zones["private"] = new r53.PrivateHostedZone(this, private_domain, {
       zoneName: private_domain,
       vpc: props.vpc
     })

@@ -7,6 +7,7 @@ import r53 = require('@aws-cdk/aws-route53')
 
 interface ELBProps {
   vpc:       ec2.IVpc;
+  zones:     { [key: string]: r53.IPrivateHostedZone|r53.IPublicHostedZone }
   asgs:      { [key: string]: asg.AutoScalingGroup };
 }
 
@@ -20,6 +21,9 @@ export class ELB extends cdk.Construct {
     // subnets
     const public_subnet:         ec2.SubnetSelection = { subnetGroupName: `${env}-public` }
     const private_subnet:        ec2.SubnetSelection = { subnetGroupName: `${env}-private` }
+
+    // hostzone
+    const hostzone: string = this.node.tryGetContext('hostzone');
 
     // [targetgroup] ------------------------------------------------------------------
     // create default tg for web-tg
@@ -35,11 +39,9 @@ export class ELB extends cdk.Construct {
 
     // [loadbarancer] -----------------------------------------------------------------
     // create certificate
-    const hostzone:    string          = this.node.tryGetContext('hostzone');
-    const public_zone: r53.IHostedZone = r53.HostedZone.fromLookup(this, hostzone, { domainName: hostzone })
     const certificateArn = new acm.DnsValidatedCertificate(this, 'SiteCertificate', {
       domainName: `*.${hostzone}`,
-      hostedZone: public_zone,
+      hostedZone: props.zones["public"],
       region: 'ap-northeast-1',
     }).certificateArn
 
